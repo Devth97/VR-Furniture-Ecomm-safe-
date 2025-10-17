@@ -1,0 +1,18 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:8081",
+  "loginUser": "thammikt@gmail.com",
+  "loginPassword": "123123",
+  "executionArgs": {
+    "projectName": "a0-project",
+    "projectPath": "C:\\Users\\LENOVO\\Downloads\\VR integrated Furniture ecomm\\a0-project",
+    "testIds": [],
+    "additionalInstruction": "",
+    "envs": {
+      "API_KEY": "sk-user-ht65SGdW8MfALUi5XF8PZHpR40d-cAYTmMoV_TvvID54jPQnne-TmusEYf6TgJih-F091uT6xbgf67v03KMg4y7Y4oEA_hOYBSoXxOeblpqkptIL5PblSDF6RpZ-8lqVkcc"
+    }
+  },
+  "proxy": "http://13d71a27-046b-40c4-a326-275934f19dac:xOQQXV6StrsFXzgIUBrFUXrEA6uBYiPE@tun.testsprite.com:8080"
+}

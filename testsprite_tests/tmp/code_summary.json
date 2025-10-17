@@ -1,0 +1,69 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "React Native (Expo)",
+    "React Native Web",
+    "React Navigation",
+    "Supabase (Auth, Postgres, Storage)",
+    "Ionicons",
+    "WebView",
+    "Sonner Native (toasts)"
+  ],
+  "features": [
+    {
+      "name": "Authentication & Context",
+      "description": "Supabase auth with session management, password recovery, global AuthContext for login/logout/signup.",
+      "files": ["App.tsx", "screens/LoginScreen.tsx", "screens/ResetPasswordScreen.tsx", "supabase.js"]
+    },
+    {
+      "name": "Home & Catalog",
+      "description": "Home screen with categories and featured products; product listing and details.",
+      "files": ["screens/HomeScreen.tsx", "screens/ProductListScreen.tsx", "screens/ProductDetailScreen.tsx"]
+    },
+    {
+      "name": "3D/VR Preview",
+      "description": "Sketchfab embedded viewer via iframe/WebView; replace navigation back to ProductDetail.",
+      "files": ["screens/VRViewScreen.tsx", "screens/ProductDetailScreen.tsx"]
+    },
+    {
+      "name": "Cart",
+      "description": "Add to cart from Home/Detail, list items with image/name/desc/price, delete with confirm, total calculation.",
+      "files": ["screens/CartScreen.tsx", "supabase.js"]
+    },
+    {
+      "name": "Checkout (COD) & Success",
+      "description": "Checkout form validation, create order and order_items in Supabase, navigate to OrderSuccess screen.",
+      "files": ["screens/CheckoutScreen.tsx", "screens/OrderSuccessScreen.tsx", "supabase.js"]
+    },
+    {
+      "name": "Profile & Orders",
+      "description": "Profile shows environmental impact and user's recent orders.",
+      "files": ["screens/ProfileScreen.tsx", "supabase.js"]
+    },
+    {
+      "name": "Sell Furniture (Listings)",
+      "description": "Users submit listings with photos uploaded to Supabase Storage.",
+      "files": ["screens/SellFurnitureScreen.tsx", "supabase.js"]
+    },
+    {
+      "name": "Admin - Detection",
+      "description": "Email allowlist sets isAdmin in AuthContext (e.g., thammikt@gmail.com).",
+      "files": ["App.tsx"]
+    },
+    {
+      "name": "Admin - Dashboard",
+      "description": "Stats (orders/listings/revenue), recent activity, quick actions.",
+      "files": ["screens/AdminDashboardScreen.tsx"]
+    },
+    {
+      "name": "Admin - Order Management",
+      "description": "View all orders and update status (pending/confirmed/shipped/delivered/cancelled).",
+      "files": ["screens/AdminOrderManagementScreen.tsx", "supabase.js"]
+    },
+    {
+      "name": "Admin - Listings Management",
+      "description": "Review user listings and approve/reject.",
+      "files": ["screens/AdminListingsManagementScreen.tsx", "supabase.js"]
+    }
+  ]
+}

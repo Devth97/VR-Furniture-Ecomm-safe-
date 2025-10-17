@@ -1,0 +1,598 @@
+[
+  {
+    "id": "TC001",
+    "title": "Load Home Screen with Categories and Featured Products",
+    "description": "Verify that the Home screen loads the featured products and categories within 3 seconds on broadband.",
+    "category": "performance",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the app and navigate to the Home screen."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that featured products are displayed."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that product categories are visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Measure that all featured products and categories load within 3000 milliseconds."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "ProductDetail Shows Accurate Details and Conditional 3D/VR Preview Button",
+    "description": "Verify that the ProductDetail screen shows complete product details and only displays the 3D/VR preview button if a 3D model exists.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "From Home or Product list, select a product which includes a 3D/VR model."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify product details: name, description, price, environmental impact metrics display correctly."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the 3D/VR preview button is visible."
+      },
+      {
+        "type": "action",
+        "description": "Return to Product list and select a product without a 3D/VR model."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm product details are displayed accurately."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the 3D/VR preview button is NOT visible."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "3D/VR Viewer Navigation Back to ProductDetail",
+    "description": "Ensure embedded Sketchfab 3D/VR viewer opens correctly and navigating back returns to ProductDetail screen.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open a product with a 3D/VR model and tap the 3D/VR preview button."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the Sketchfab viewer loads the 3D model correctly within the WebView or iframe."
+      },
+      {
+        "type": "action",
+        "description": "Use the navigation back control within the VRViewScreen."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the app returns to the ProductDetail screen preserving product data."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Add Items to Cart from Home and ProductDetail",
+    "description": "Validate adding furniture items to the cart from both Home screen and ProductDetail screen updates server-side cart and calculates totals correctly.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "As an authenticated user, add an item to the cart from the Home screen."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm server confirms item addition and cart count updates."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to ProductDetail and add another item to cart."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm server-side cart reflects both items."
+      },
+      {
+        "type": "action",
+        "description": "Open Cart screen and verify item details, images, names, descriptions, prices, and total cost."
+      },
+      {
+        "type": "assertion",
+        "description": "Validate total price calculation matches sum of individual item prices and quantities."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Modify Items in Cart and Confirm Removal",
+    "description": "Verify updating quantities and removing items from cart with confirmation updates server cart and recalculates totals.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Add multiple items to cart for an authenticated user."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to Cart screen."
+      },
+      {
+        "type": "action",
+        "description": "Update quantity of an item."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm server reflects new quantity and total price updates accordingly."
+      },
+      {
+        "type": "action",
+        "description": "Remove an item; confirm removal when prompted."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify server confirms removal and item no longer shown."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Checkout with Valid Shipping Info and Cash on Delivery",
+    "description": "Validate checkout process requires valid shipping information, creates order and order_items on backend, and clears cart after successful order creation.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Add items to cart and proceed to Checkout screen as an authenticated user."
+      },
+      {
+        "type": "action",
+        "description": "Fill shipping details with valid information."
+      },
+      {
+        "type": "action",
+        "description": "Select cash on delivery payment option and submit order."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm order and associated order_items records are created in Supabase backend."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cart is cleared server-side after successful order creation."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify navigation to OrderSuccess screen with confirmation message."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Checkout Validation with Invalid or Missing Shipping Info",
+    "description": "Ensure the checkout form validates shipping inputs and blocks order submission on invalid or incomplete data.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Proceed to Checkout with items in cart."
+      },
+      {
+        "type": "action",
+        "description": "Leave required shipping fields empty or enter invalid data formats."
+      },
+      {
+        "type": "action",
+        "description": "Try to submit the order."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that validation messages are shown and submission is blocked."
+      },
+      {
+        "type": "action",
+        "description": "Correct the inputs with valid data."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the order submission proceeds successfully."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Profile Displays Environmental Metrics and Order History",
+    "description": "Verify that the Profile screen shows user-specific environmental impact metrics and a list of past orders with details.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as a user with previous orders and environmental impact data."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to Profile screen."
+      },
+      {
+        "type": "assertion",
+        "description": "Check environmental impact stats are displayed: e.g., carbon footprint savings."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify recent orders list is shown with product names, dates, statuses."
+      },
+      {
+        "type": "action",
+        "description": "Select an order from the list."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm order details page or modal displays correctly."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "User Creates a Furniture Listing with Photo Upload",
+    "description": "Test that users can submit new furniture listings including photo uploads to Supabase Storage and listings default to pending status.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as a user."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to Sell Furniture screen."
+      },
+      {
+        "type": "action",
+        "description": "Fill out listing form with required fields including photos and location data."
+      },
+      {
+        "type": "action",
+        "description": "Submit the furniture listing."
+      },
+      {
+        "type": "assertion",
+        "description": "Validate images upload successfully to Supabase Storage."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the listing record is created with status set to 'pending' for admin review."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Admin Dashboard Displays Accurate Stats and Recent Activity",
+    "description": "Ensure admin dashboard shows correct aggregates (orders, listings, revenue) and recent user activity without delay or errors.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as an admin user."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to Admin Dashboard screen."
+      },
+      {
+        "type": "assertion",
+        "description": "Check that aggregate statistics for total orders, listings, and revenue display correctly."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify recent activity feed shows correct latest orders and user listings."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Admin Order Management: Update Order Status and Cancel Orders",
+    "description": "Validate admin users can view all orders, update their statuses to various states, and cancel orders successfully.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as admin."
+      },
+      {
+        "type": "action",
+        "description": "Open Admin Order Management screen."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the list of orders is visible with current statuses."
+      },
+      {
+        "type": "action",
+        "description": "Select an order and update status through all possible transitions: pending, confirmed, shipped, delivered."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm status changes are saved and reflected throughout the UI and backend."
+      },
+      {
+        "type": "action",
+        "description": "Cancel an order and confirm the cancellation."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify order status is updated to 'cancelled' with no errors."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Admin Listings Management: Approve and Reject User Listings",
+    "description": "Test that admin users can approve or reject user-submitted furniture listings without errors and status updates are correctly saved.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Log in as admin."
+      },
+      {
+        "type": "action",
+        "description": "Navigate to Admin Listings Management screen."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify listings with 'pending' status are listed."
+      },
+      {
+        "type": "action",
+        "description": "Select a pending listing and approve it."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the listing status updates to 'approved' and is reflected in frontend and backend."
+      },
+      {
+        "type": "action",
+        "description": "Select another listing and reject it."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify listing status updates to 'rejected' and no errors occur."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Authentication Flow Success and Session Management",
+    "description": "Validate user can register, login, and logout correctly with session state maintained across app navigation.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to Login screen."
+      },
+      {
+        "type": "action",
+        "description": "Login with valid credentials."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm login is successful and AuthContext reflects logged in state."
+      },
+      {
+        "type": "action",
+        "description": "Navigate through various app screens."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm user remains logged in with access to user-only features."
+      },
+      {
+        "type": "action",
+        "description": "Logout from the app."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify session is cleared and access to authenticated screens is denied."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Authentication Flow Error Handling: Login with Invalid Credentials",
+    "description": "Verify login attempt with incorrect username or password is rejected and error message is shown.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to Login screen."
+      },
+      {
+        "type": "action",
+        "description": "Enter invalid username and/or password."
+      },
+      {
+        "type": "action",
+        "description": "Attempt login."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify login is unsuccessful and appropriate error message is displayed."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Admin Access Restriction Based on Email Allowlist",
+    "description": "Ensure that only users with emails listed in admin allowlist can access admin features and dashboards; others receive access denied.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as a user whose email is in the admin allowlist."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that admin options and dashboard screens are accessible."
+      },
+      {
+        "type": "action",
+        "description": "Logout and login as a user who is NOT in the admin allowlist."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm admin areas are restricted, showing access denied or invisible."
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Security Enforcement via Supabase Row Level Security (RLS)",
+    "description": "Validate that user data and admin features are protected by Supabase RLS policies to prevent unauthorized data access or modifications.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to access user data or modify orders/listings without proper authentication or authorization."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access is denied by backend and no unauthorized data is exposed."
+      },
+      {
+        "type": "action",
+        "description": "Attempt to perform admin actions as non-admin user."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm backend rejects these operations with appropriate error codes."
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Cart Persistence Across Sessions",
+    "description": "Ensure that the cart content persists correctly across user sessions and device restarts via server-side storage.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login and add multiple items to cart."
+      },
+      {
+        "type": "action",
+        "description": "Logout and then login again on the same or different device."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the cart contents are restored from server-side data."
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "UI Accessibility Checks for Key Screens",
+    "description": "Verify accessibility features such as screen reader labels, focus order, and sufficient contrast on Home, ProductDetail, Cart, Checkout, Profile, and Admin screens.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate through Home, ProductDetail, Cart, Checkout, Profile, and Admin dashboard screens."
+      },
+      {
+        "type": "assertion",
+        "description": "Validate all UI elements have accessibility labels."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify logical and intuitive focus navigation order."
+      },
+      {
+        "type": "assertion",
+        "description": "Check color contrast ratios meet accessibility standards."
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Error Handling When Image Upload Fails During Listing Creation",
+    "description": "Simulate image upload failure and verify that user receives error notifications and listing is not submitted.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Start creating a new furniture listing and upload images."
+      },
+      {
+        "type": "action",
+        "description": "Simulate Supabase Storage image upload failure (e.g., network issue or quota exceeded)."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm user sees a clear error message explaining the failure."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify listing form remains intact for retry; no incomplete listing is submitted."
+      }
+    ]
+  },
+  {
+    "id": "TC020",
+    "title": "Order Success Screen Navigation Options Verification",
+    "description": "Verify the OrderSuccess screen displays correct confirmation message and allows users to navigate to Home or Profile screens.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Place a valid order through checkout."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm OrderSuccess screen is shown with order confirmation message."
+      },
+      {
+        "type": "action",
+        "description": "Select navigation buttons to return to Home screen."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify app navigates correctly to Home screen."
+      },
+      {
+        "type": "action",
+        "description": "Repeat navigation to OrderSuccess and select to go to Profile screen."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm navigation to Profile screen works as expected."
+      }
+    ]
+  }
+]
