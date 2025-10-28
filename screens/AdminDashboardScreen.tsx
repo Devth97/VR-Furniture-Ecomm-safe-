@@ -40,9 +40,9 @@ export default function AdminDashboardScreen() {
         console.error('Error fetching orders:', ordersError);
       }
 
-      // Load listings statistics
+      // Load listings statistics (from user_listings)
       const { data: listingsData, error: listingsError } = await supabaseClient
-        .from('listings')
+        .from('user_listings')
         .select('id, status, created_at');
 
       if (listingsError) {

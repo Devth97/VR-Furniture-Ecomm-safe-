@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Image, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -22,22 +22,18 @@ export default function AdminListingsManagementScreen() {
     try {
       setIsLoading(true);
       
-      // Get all furniture listings with user information
+      // Get all user-submitted listings
       const { data, error } = await supabaseClient
-        .from('listings')
+        .from('user_listings')
         .select(`
           id,
           title,
-          description,
-          condition,
-          price,
           location_text,
           phone,
           image_urls,
           status,
           created_at,
-          user_id,
-          user_profiles!listings_user_id_fkey(full_name, email)
+          user_id
         `)
         .order('created_at', { ascending: false });
 
@@ -47,10 +43,10 @@ export default function AdminListingsManagementScreen() {
         return;
       }
 
-      const listingsWithUser = data.map(listing => ({
+      const listingsWithUser = (data || []).map(listing => ({
         ...listing,
-        user_name: listing.user_profiles?.full_name || 'Unknown User',
-        user_email: listing.user_profiles?.email || 'No email'
+        user_name: 'User',
+        user_email: listing.user_id
       }));
 
       setListings(listingsWithUser);
@@ -64,26 +60,47 @@ export default function AdminListingsManagementScreen() {
 
   const updateListingStatus = async (listingId: string, newStatus: string) => {
     try {
+      console.log('Updating listing status', { listingId, newStatus });
+      // Read existing history to maintain audit trail without RPC
+      const { data: existing, error: fetchErr } = await supabaseClient
+        .from('user_listings')
+        .select('history')
+        .eq('id', listingId)
+        .single();
+      if (fetchErr) throw fetchErr;
+
+      const currentHistory = Array.isArray(existing?.history) ? existing.history : [];
+      const appended = [
+        ...currentHistory,
+        { status: newStatus, at: new Date().toISOString(), by: user?.email || 'admin' }
+      ];
+
       const { error } = await supabaseClient
-        .from('listings')
-        .update({ status: newStatus })
-        .eq('id', listingId);
+        .from('user_listings')
+        .update({ status: newStatus, history: appended })
+        .eq('id', listingId)
+        .select()
+        .single();
+      if (error) throw error;
 
-      if (error) {
-        console.error('Error updating listing status:', error);
-        toast.error('Failed to update listing status');
-        return;
-      }
-
+      // Optimistically update UI
+      setListings(prev => prev.map((l: any) => l.id === listingId ? { ...l, status: newStatus } : l));
       toast.success('Listing status updated');
-      loadAllListings(); // Reload listings
+      // Reload from server to ensure persistence
+      loadAllListings();
     } catch (error) {
       console.error('Error updating listing status:', error);
-      toast.error('Failed to update listing status');
+      const message = (error as any)?.message || (error as any)?.error_description || 'Failed to update listing status';
+      toast.error(message);
     }
   };
 
   const approveListing = (listingId: string) => {
+    if (Platform.OS === 'web') {
+      // Bypass confirm on web to ensure handler fires
+      updateListingStatus(listingId, 'approved');
+      return;
+    }
     Alert.alert(
       'Approve Listing',
       'Are you sure you want to approve this furniture listing?',
@@ -95,6 +112,11 @@ export default function AdminListingsManagementScreen() {
   };
 
   const rejectListing = (listingId: string) => {
+    if (Platform.OS === 'web') {
+      // Bypass confirm on web to ensure handler fires
+      updateListingStatus(listingId, 'rejected');
+      return;
+    }
     Alert.alert(
       'Reject Listing',
       'Are you sure you want to reject this furniture listing?',
@@ -226,17 +248,17 @@ export default function AdminListingsManagementScreen() {
 
                 <View style={styles.listingDetails}>
                   <Text style={styles.listingDescription} numberOfLines={3}>
-                    {listing.description || 'No description provided'}
+                    {listing.location_text || 'No description provided'}
                   </Text>
                   
                   <View style={styles.listingMeta}>
                     <View style={styles.metaItem}>
                       <Ionicons name="pricetag" size={16} color="#666" />
-                      <Text style={styles.metaText}>${listing.price}</Text>
+                      <Text style={styles.metaText}>N/A</Text>
                     </View>
                     <View style={styles.metaItem}>
                       <Ionicons name="construct" size={16} color="#666" />
-                      <Text style={styles.metaText}>{listing.condition}</Text>
+                      <Text style={styles.metaText}>N/A</Text>
                     </View>
                     <View style={styles.metaItem}>
                       <Ionicons name="location" size={16} color="#666" />

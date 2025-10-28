@@ -898,8 +898,8 @@ export const createListing = async ({ title, phone, location_text, latitude, lon
       latitude,
       longitude,
       image_urls: image_urls || [],
-      status: 'submitted',
-      history: [{ status: 'submitted', at: new Date().toISOString() }]
+      status: 'pending',
+      history: [{ status: 'pending', at: new Date().toISOString() }]
     };
 
     const { data, error } = await supabaseClient
