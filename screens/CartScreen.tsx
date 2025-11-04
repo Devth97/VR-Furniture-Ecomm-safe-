@@ -258,12 +258,12 @@ export default function CartScreen() {
             <Text style={styles.impactTitle}>Your Environmental Impact</Text>
             <View style={styles.impactStats}>
               <View style={styles.impactItem}>
-                <Ionicons name="leaf" size={24} color="#2E7D32" />
+                <Ionicons name="leaf" size={18} color="#2E7D32" />
                 <Text style={styles.impactValue}>{impact.trees_saved.toFixed(1)}</Text>
                 <Text style={styles.impactLabel}>Trees Saved</Text>
               </View>
               <View style={styles.impactItem}>
-                <Ionicons name="cloud-outline" size={24} color="#2E7D32" />
+                <Ionicons name="cloud-outline" size={18} color="#2E7D32" />
                 <Text style={styles.impactValue}>{impact.carbon_reduced.toFixed(1)}kg</Text>
                 <Text style={styles.impactLabel}>CO₂ Reduced</Text>
               </View>
@@ -401,33 +401,35 @@ const styles = StyleSheet.create({
   },
   environmentalImpact: {
     backgroundColor: '#E8F5E9',
-    padding: 16,
+    padding: 10,
     marginHorizontal: 16,
     borderRadius: 12,
-    marginBottom: 16,
+    marginBottom: 10,
   },
   impactTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#2E7D32',
-    marginBottom: 12,
+    marginBottom: 8,
     textAlign: 'center',
   },
   impactStats: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    paddingHorizontal: 8,
   },
   impactItem: {
     alignItems: 'center',
+    minWidth: '45%',
   },
   impactValue: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#2E7D32',
-    marginVertical: 4,
+    marginVertical: 2,
   },
   impactLabel: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#333',
   },
   summary: {

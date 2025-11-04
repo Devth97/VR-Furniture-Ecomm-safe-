@@ -41,9 +41,15 @@ export default function ProductDetailScreen({ route }: { route?: { params?: Deta
       setIsAdding(true);
 
       const userId = (user as any).id || (user as any).uid;
-      console.log('AddToCart start', { userId, productId: product.id, price: product.price, qty: 1 });
+      const productId = (product as any)?.id || (product as any)?.product_id || (product as any)?.uuid || (product as any)?.pk;
+      if (!productId) {
+        console.warn('AddToCart: missing product id on product', product);
+        toast.error('Cannot add this item: missing product id');
+        return;
+      }
+      console.log('AddToCart start', { userId, productId, price: product.price, qty: 1 });
 
-      const res = await addToCart(userId, product.id, 1);
+      const res = await addToCart(userId, productId, 1);
       console.log('AddToCart response', res);
 
       if (!res) {

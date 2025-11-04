@@ -78,7 +78,18 @@ export default function HomeScreen() {
         return;
       }
       const userId = (user as any).id || (user as any).uid;
-      await addToCart(userId, product.id, 1);
+      // Support different product shapes for newly added items
+      const productId = product?.id || product?.product_id || product?.uuid || product?.pk;
+      if (!productId) {
+        console.warn('AddToCart: missing product id on product', product);
+        toast.error('Cannot add this item: missing product id');
+        return;
+      }
+      const res = await addToCart(userId, productId, 1);
+      if (!res) {
+        toast.error('Failed to add to cart');
+        return;
+      }
       toast.success('Added to cart');
     } catch (error) {
       console.error('Add to cart error:', error);
