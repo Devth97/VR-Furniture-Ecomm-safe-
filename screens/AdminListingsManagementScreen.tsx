@@ -156,7 +156,7 @@ export default function AdminListingsManagementScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => (navigation as any).navigate('ProfileStack')}>
             <Ionicons name="arrow-back" size={24} color="#2E7D32" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Listings Management</Text>
@@ -173,7 +173,7 @@ export default function AdminListingsManagementScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => (navigation as any).navigate('ProfileStack')}>
           <Ionicons name="arrow-back" size={24} color="#2E7D32" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Listings Management</Text>
