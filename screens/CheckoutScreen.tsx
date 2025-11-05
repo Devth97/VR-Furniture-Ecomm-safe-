@@ -72,7 +72,7 @@ export default function CheckoutScreen() {
       setPlacing(true);
       const userId = (user as any).id || (user as any).uid; // prefer .id; Supabase web SDK provides id
 
-      const shippingDetails = { address } as any; // backend only expects shipping_address
+      const shippingDetails = { address, full_name: fullName } as any; // include name for order record
       const order = await createOrder(userId, cartItems, shippingDetails);
       if (!order) {
         toast.error('Failed to place order');

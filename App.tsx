@@ -134,8 +134,15 @@ function SellStack() {
 
 // Auth stack
 function AuthStack() {
+  // Ensure reset password link opens the ResetPassword screen directly on web
+  const initialRoute = (typeof window !== 'undefined' && (
+    (window.location.hash || '').includes('access_token') ||
+    (window.location.hash || '').includes('type=recovery') ||
+    (window.location.href || '').includes('/#/ResetPassword')
+  )) ? 'ResetPassword' : 'Login';
+
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialRoute}>
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
     </Stack.Navigator>

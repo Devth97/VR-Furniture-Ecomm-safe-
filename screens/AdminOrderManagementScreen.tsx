@@ -22,7 +22,7 @@ export default function AdminOrderManagementScreen() {
     try {
       setIsLoading(true);
       
-      // Get all orders with user information and order items count
+      // Get all orders with order items count (omit joined user_profiles to avoid RLS join issues)
       const { data, error } = await supabaseClient
         .from('orders')
         .select(`
@@ -31,9 +31,13 @@ export default function AdminOrderManagementScreen() {
           total_amount,
           shipping_address,
           created_at,
+          customer_name,
           user_id,
-          order_items(count),
-          user_profiles!orders_user_id_fkey(full_name, email)
+          order_items(
+            quantity,
+            price,
+            product:products(id, name, image)
+          )
         `)
         .order('created_at', { ascending: false });
 
@@ -43,11 +47,12 @@ export default function AdminOrderManagementScreen() {
         return;
       }
 
-      const ordersWithCount = data.map(order => ({
+      const ordersWithCount = (data || []).map(order => ({
         ...order,
-        items_count: order.order_items?.[0]?.count || 0,
-        user_name: order.user_profiles?.full_name || 'Unknown User',
-        user_email: order.user_profiles?.email || 'No email'
+        items_count: Array.isArray(order.order_items) ? order.order_items.length : 0,
+        // User info omitted to prevent RLS join from hiding orders
+        user_name: 'Customer',
+        user_email: ''
       }));
 
       setOrders(ordersWithCount);
@@ -113,7 +118,7 @@ export default function AdminOrderManagementScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => (navigation as any).navigate('ProfileStack')}>
             <Ionicons name="arrow-back" size={24} color="#2E7D32" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Order Management</Text>
@@ -130,7 +135,7 @@ export default function AdminOrderManagementScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => (navigation as any).navigate('ProfileStack')}>
           <Ionicons name="arrow-back" size={24} color="#2E7D32" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Order Management</Text>
@@ -183,8 +188,7 @@ export default function AdminOrderManagementScreen() {
                 <View style={styles.orderHeader}>
                   <View>
                     <Text style={styles.orderId}>Order #{order.id.substring(0, 8)}...</Text>
-                    <Text style={styles.customerName}>{order.user_name}</Text>
-                    <Text style={styles.customerEmail}>{order.user_email}</Text>
+                    <Text style={styles.customerName}>{order.customer_name || 'Customer'}</Text>
                   </View>
                   <View style={[styles.statusBadge, { backgroundColor: getStatusColor(order.status) }]}>
                     <Text style={styles.statusText}>{order.status.toUpperCase()}</Text>
@@ -197,6 +201,28 @@ export default function AdminOrderManagementScreen() {
                   </Text>
                   <Text style={styles.orderAmount}>${order.total_amount.toFixed(2)}</Text>
                   <Text style={styles.orderItems}>{order.items_count} items</Text>
+                  {/* Product preview (first item) */}
+                  {Array.isArray(order.order_items) && order.order_items.length > 0 && (
+                    <View style={styles.productPreviewRow}>
+                      {/* simple square thumbnail using Image if URL exists */}
+                      {/* We use a native Image to display product thumbnail if provided */}
+                      {/* @ts-ignore React Native Image import is implicit in RN runtime */}
+                      <img
+                        src={order.order_items[0]?.product?.image || ''}
+                        alt={order.order_items[0]?.product?.name || 'Product'}
+                        style={styles.productImage as any}
+                        onError={(e: any) => { e.currentTarget.style.display = 'none'; }}
+                      />
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.productName} numberOfLines={1}>
+                          {order.order_items[0]?.product?.name || 'Product'}
+                        </Text>
+                        {order.order_items.length > 1 && (
+                          <Text style={styles.moreItemsText}>+ {order.order_items.length - 1} more item(s)</Text>
+                        )}
+                      </View>
+                    </View>
+                  )}
                   {order.shipping_address && (
                     <Text style={styles.shippingAddress} numberOfLines={2}>
                       📍 {order.shipping_address}
@@ -380,6 +406,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
     marginTop: 4,
+  },
+  productPreviewRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  productImage: {
+    width: 44,
+    height: 44,
+    borderRadius: 8,
+    marginRight: 10,
+    backgroundColor: '#EEE',
+    objectFit: 'cover',
+  },
+  productName: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  moreItemsText: {
+    fontSize: 12,
+    color: '#777',
   },
   orderActions: {
     flexDirection: 'row',

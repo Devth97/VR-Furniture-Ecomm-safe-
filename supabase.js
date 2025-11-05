@@ -740,6 +740,7 @@ export const createOrder = async (userId, cartItems, shippingDetails) => {
         user_id: userId,
         status: 'pending',
         shipping_address: shippingDetails.address, // keep single address field for compatibility
+        customer_name: shippingDetails.full_name || null,
         total_amount: cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0)
       })
       .select()

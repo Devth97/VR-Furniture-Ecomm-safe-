@@ -28,7 +28,12 @@ export default function ResetPasswordScreen() {
       console.log('ResetPasswordScreen: Hash:', hash);
 
       // Try access_token/refresh_token in URL hash
-      const hashParams = new URLSearchParams(hash.startsWith('#') ? hash.slice(1) : hash);
+      // Supabase with hash routing can produce: "#/ResetPassword#access_token=...&refresh_token=..."
+      // In that case, tokens are after the SECOND '#'. Extract the final fragment only.
+      const tokenFragment = hash.includes('#/ResetPassword#')
+        ? hash.split('#/ResetPassword#')[1]
+        : (hash.startsWith('#') ? hash.slice(1) : hash);
+      const hashParams = new URLSearchParams(tokenFragment);
       const accessToken = hashParams.get('access_token');
       const refreshToken = hashParams.get('refresh_token');
       
